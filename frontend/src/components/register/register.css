@@ -1,0 +1,12 @@
+.pass-div>div{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.register-submit{
+    margin-right: 13.5vw;
+}
+.radio{
+    width: 2vw;
+    height: 4vh;
+    vertical-align: middle;
+}

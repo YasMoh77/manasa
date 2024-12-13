@@ -1,0 +1,18 @@
+
+.teacher-page-img{
+ max-height: 100%;
+ width: 50%;
+}
+.main-cont-teacher{
+    min-height: 60vh;
+}
+@media(min-width:768px){
+    .teachers-col{
+        width: 31% !important;
+    }
+}
+
+.ab{
+    color: aqua;
+    background-color: aquamarine;
+}

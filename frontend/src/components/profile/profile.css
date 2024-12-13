@@ -1,0 +1,14 @@
+.main-div{
+    min-height: 90vh;
+}
+.eye{
+    left: 2vw;
+    top: 1vh;
+}
+/** image */
+.pic-cont{
+    height: 6rem;
+}
+.user-icon{
+    font-size: 7rem;
+}
