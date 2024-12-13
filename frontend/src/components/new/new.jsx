@@ -2,9 +2,12 @@ import React from 'react'
 
 const New = () => {
     return (
+        <>
         <div>
-            fffhggg
+            fffhgppo
         </div>
+        <a></a>
+        </>
     )
 }
 

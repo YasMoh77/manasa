@@ -17,7 +17,7 @@ use App\Http\Controllers\UserController;
 */
 
 //Route::get('/',[UserController::class,'wel'])->name('home');
-Route::get('/dodd',function(){
+Route::get('/do',function(){
 //echo    $now=Carbon::now('Y-m-d');
 //return view('welcome');
 
