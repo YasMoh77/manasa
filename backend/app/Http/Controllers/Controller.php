@@ -167,12 +167,16 @@ class Controller extends BaseController
        if($check){
          return response()->json(['done'=>'','message'=>'انت مشغول في هذا اليوم والوقت']);
        }
+       
+       //set course price based on course grade
+       $price=$request->c_grade<=6?160:($request->c_grade>=7&&$request->c_grade<=9?180:($request->c_grade==10||$request->c_grade==11?200:250)); 
        //add course
-       $course->name   = $request->c_name;
+          $course->name   = $request->c_name;
           $course->subject= $request->c_subject;  
           $course->grade  = $request->c_grade;  
           $course->day    = $request->c_day;  
           $course->time   = $request->c_time;  
+          $course->price  = $price;  
           $course->teacher= $teacher;
        $course->save();
       //return response
@@ -183,8 +187,8 @@ class Controller extends BaseController
     }
 
 
-    //get teacher courses
-    public function myCourses(Request $request)
+    //get teacher courses studentCourses
+    public function teacherCourses(Request $request)
     {   
         $courses=Course::where('teacher',$request->id)->get();
         //return courses
@@ -192,6 +196,17 @@ class Controller extends BaseController
           'courses'=>$courses
         ]);
     }
+
+    //get student courses 
+    public function studentCourses(Request $request)
+    {   
+       /* $courses=Course::where('teacher',$request->id)->get();
+        //return courses
+        return response()->json([
+          'courses'=>$courses
+        ]);*/
+    }
+
 
 
 

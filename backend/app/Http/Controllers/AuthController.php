@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\User; 
+use App\Models\Student; 
 use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -65,18 +67,30 @@ class AuthController extends Controller
             ]);
         }
         
+        $logger='';
         //attempt login
-        $credentials    =   $request->only('phone', 'password');
-        if (! Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'بيانات الدخول غير صحيحة',
-                //'guest'=>'guest'
-            ]);
+        $teacerCredentials    =   $request->only('phone', 'password');
+        if ( Auth::attempt($teacerCredentials)) {
+            //logger is a teacher
+            $logger='teacher';
+            /**/
+        }else{
+            //check if logger is a student
+           $found=Student::where('phone',$request->phone)->first();
+          if(!$found || !Hash::check($request->password,$found->password)){
+                return response()->json([
+                    'message' => 'بيانات الدخول غير صحيحة',
+                ]);
+          }else{
+              //student is found
+              $logger='student';
+          }
         }
 
         //create token
-        $user   = User::where('phone', $request->phone)->firstOrFail();
-        $token  = $user->createToken('auth_token')->plainTextToken;
+        $logMe=$logger==='teacher'? User::where('phone', $request->phone)->firstOrFail() : Student::where('phone', $request->phone)->firstOrFail();
+       // $user   = User::where('phone', $request->phone)->firstOrFail();
+        $token  = $logMe->createToken('auth_token')->plainTextToken;
         
         $authData=[];
         $authData['token']=$token;

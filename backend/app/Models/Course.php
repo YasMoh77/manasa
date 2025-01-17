@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\User;
+use App\Models\Student;
 
 
 class Course extends Model
@@ -19,6 +20,12 @@ class Course extends Model
     public function user(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'course_user', 'course_id', 'user_id');
+    }
+
+    //relationship student-course
+    public function student(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id');
     }
 
     

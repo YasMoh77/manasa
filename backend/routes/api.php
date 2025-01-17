@@ -29,34 +29,49 @@ Route::get('/user',[AuthController::class, 'user'] )->middleware('auth:sanctum')
 Route::get('/subjects', [Controller::class, 'subjects']);
 //fetch all grades
 Route::get('/grades', [Controller::class, 'grades']);
-//fetch all courses
-Route::get('/courses', [Controller::class, 'courses']);
 //fetch all teachers
 Route::get('/teachers', [Controller::class, 'teachers']);
 //fetch one teacher data
 Route::post('/one-teacher-data/{id}', [Controller::class, 'oneTeacherData']);
-//fetch one teacher data
-Route::post('/one-teacher-courses/{id}', [Controller::class, 'oneTeacherCourses']);
-//make a course
-Route::post('/start-course', [Controller::class, 'courseStart']);
-//get mycourses(one teacher's course)
-Route::post('/my-courses', [Controller::class, 'myCourses']);
-//get a certain course
-Route::get('/get-course/{id}',[CourseController::class,'getCourseData']);
 
-/****** fetch only a few ******/
-//fetch a few teachers
-Route::get('/some-teachers', [Controller::class, 'someTeachers']);
+
+/************ COURSES ************/
+//fetch all courses
+Route::get('/courses', [Controller::class, 'courses']);
 //fetch a few courses
 Route::get('/some-courses', [Controller::class, 'someCourses']);
+//fetch one teacher courses
+Route::post('/one-teacher-courses/{id}', [Controller::class, 'oneTeacherCourses']);
+//create a course
+Route::post('/start-course', [Controller::class, 'courseStart']);
+//get mycourses(one teacher's course)
+Route::post('/teacher-courses', [Controller::class, 'teacherCourses']);
+//get studentcourses
+Route::post('/student-courses', [Controller::class, 'studentCourses']);
+//get a certain course
+Route::get('/get-course/{id}',[CourseController::class,'getCourseData']);
+//check if students is subscribed to a certain course
+Route::get('/check-course-subscription/{userId}/{courseId}', [UserController::class, 'checkSubscription']);
+//insert course in pivot table
+Route::get('/piv/{userId}/{cid}', [UserController::class, 'piv']);
+
+
+/********** fetch only a few ***********/
+//fetch a few teachers
+Route::get('/some-teachers', [Controller::class, 'someTeachers']);
 //modefy data
 Route::post('/modefy-data', [Controller::class, 'modefyData']);
 
-/***** fetch *****/
+
+/************ fetch **************/
 //fetchuser name
 Route::get('/get-name/{userId}', [UserController::class, 'getUserName']);
-Route::get('/piv/{userId}/{cid}', [UserController::class, 'piv']);
-Route::get('/check-course-subscription/{userId}/{courseId}', [UserController::class, 'checkSubscription']);
+//search
+Route::get('/search-student/{searchVal}/{radioVal}', [UserController::class, 'searchDashboard']);
+
+//receive payments
+Route::post('/receive-payment', [UserController::class, 'receivePayment']);
+Route::get('/get-payments', [UserController::class, 'getPayments']);
 
 
 //pdf
