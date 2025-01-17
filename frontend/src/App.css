@@ -58,6 +58,7 @@
 /**fonts */
 .font-x{font-size: 5rem;}
 .font-sm{font-size: 14px;}
+.font-vsm{font-size: 11px;}
 /** col */
 .col-3,.col-md-3,.col-sm-3{width: 23%;}
 .col-4,.col-md-4,.col-sm-4{width: 31%;}
@@ -65,3 +66,4 @@
 /**more */
 .hr{opacity: .1;}
 .cursor{cursor: pointer;}
+.button{border: none; padding: 1vh 3vw; border-radius: 1.5vw;}

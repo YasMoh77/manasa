@@ -27,7 +27,7 @@ const Nav = () => {
     return (
         <div>
              {/* Start top-navbar  */}
-			 <div className='d-flex w-75  mx-auto  p-2 align-items-center justify-content-between fs-5'>
+			 <div className='d-flex w-100  mx-auto  p-2 align-items-center justify-content-between fs-5'>
 				<ul className=' list-unstyled list-inline m-0 p-0'>
 					<li className='list-inline-item ms-3'> <Link to='/home'>من نحن</Link></li>
 					<li className='list-inline-item ms-3'> <Link to='/teachers'>سؤال وجواب</Link></li>
@@ -47,8 +47,9 @@ const Nav = () => {
 					}
 				</ul>
 				<ul className='m-0 list-unstyled'>
-					<li className='list-inline-item '>01020121073 <i className='bi bi-phone-fill color-1'></i></li>
-					<li className='list-inline-item me-2'>hgq1100@yahoo.com <i className='bi bi-envelope-at-fill color-1'></i> </li>
+				    <li className='list-inline-item me-4'><a href='https://wa.me/201020121073'>واتس اب <i className='bi bi-whatsapp text-success'></i></a> </li>
+					<li className='list-inline-item me-4'>01020121073 <i className='bi bi-phone-fill color-1'></i></li>
+					<li className='list-inline-item me-4'>hgq1100@yahoo.com <i className='bi bi-envelope-at-fill color-1'></i> </li>
 				</ul>
 			 </div>
 			  {/* End navbar   */}
@@ -57,12 +58,11 @@ const Nav = () => {
 				  <div className='w-25 px-3 fw-bold'><i className=" fs-1 bi bi-mortarboard"></i>منصتي  Manasaty</div>
 				  <div>
 					  <ul className='list-inline p-0 mb-0'>
-							<li className='list-inline-item mx-5 '> <Link className='text-white text-decoration-none' to='/home'>الرئيسية</Link></li>
-							<li className='list-inline-item mx-5'> <Link className='text-white text-decoration-none' to='/stages'>المراحل الدراسية</Link></li>
-							<li className='list-inline-item  mx-5'> <Link className='text-white text-decoration-none' to='/teachers'>المعلمون</Link></li>
-							<li className='list-inline-item mx-5'> <Link className='text-white text-decoration-none' to='/courses'>الدروس</Link></li>
-							<li className='list-inline-item mx-5'> <Link className='text-white text-decoration-none' to='/pdf'>pdf</Link></li>
-
+							<li className='list-inline-item mx-4 '> <Link className='text-white text-decoration-none' to='/home'>الرئيسية</Link></li>
+							<li className='list-inline-item mx-4'> <Link className='text-white text-decoration-none' to='/stages'>المراحل الدراسية</Link></li>
+							<li className='list-inline-item  mx-4'> <Link className='text-white text-decoration-none' to='/teachers'>المعلمون</Link></li>
+							<li className='list-inline-item mx-4'> <Link className='text-white text-decoration-none' to='/courses'>الدروس</Link></li>
+							<li className='list-inline-item mx-4'> <Link className='text-white text-decoration-none' to='/pdf'>pdf</Link></li>
 					   </ul>
 				  </div>
 			 </div>

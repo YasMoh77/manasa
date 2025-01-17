@@ -91,7 +91,7 @@ export const UserProvider = ({children}) => {
         fetchSomeTeachersFunc()
         fetchSomeCoursesFunc()
         const storedLoginData=JSON.parse(localStorage.getItem('loginData'));
-        //set state
+        //set loginData
         setLoginData(storedLoginData)
       }, [])
 

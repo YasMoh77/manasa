@@ -27,7 +27,7 @@ const Home = () => {
             {/* top div with photo */}
             <div className='top-home d-flex bg-info'>
                 <div dir='rtl' className='h-100 w-50'>
-                    <div className='w-fit mx-auto mt-5'>
+                    <div className='w-fit mx-auto my-5'>
                         <h1 className='mt-3 mb-5'>مع منصتي </h1>
                         <h1>وفر وقتك</h1>
                         <h1>اختر معلمك </h1>
@@ -37,8 +37,8 @@ const Home = () => {
 
                 <div className='w-50'>
                     {!mainPic 
-                    ?<div className='main-pic-spinner-cont w-fit mx-auto align-content-center '><p className='spinner-border mx-auto'></p></div>
-                    :<img className='w-100 h-100' src={mainPic} />
+                    ?<div className='main-pic-spinner-cont w-fit mx-auto align-content-center '><p className='spinner-border mx-auto text-danger'></p></div>
+                    :<img className='w-100 h-100' title='main pic' alt='main pic' src={mainPic} />
                     }
                 </div>
             </div>
@@ -73,7 +73,7 @@ const Home = () => {
                 <div className='row mx-0 img-url-cont mar-b'>
                     <div className='col-12 col-md-4 '>
                     {!mainPic2 
-                    ?<div className='mt-md-3 main-pic-spinner-cont w-fit mx-auto align-content-end '><p className='spinner-border mx-auto'></p></div>
+                    ?<div className='mt-md-3 main-pic-spinner-cont w-fit mx-auto align-content-end '><p className='spinner-border mx-auto text-danger'></p></div>
                     :<img className='mt-md-4 w-100 mx-auto' src={mainPic2} />
                     }
                     </div>

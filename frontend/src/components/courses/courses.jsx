@@ -22,7 +22,7 @@ const Courses = () => {
                                 {Array.isArray(fetchCourses) && fetchCourses.length>0 
                                     ? fetchCourses.map((e)=>(
                                         /** repeated div */
-                                        <div className='col-6 border border-1 py-2 bg-light rounded-2'>
+                                        <div className='col-6 border border-1 py-3 bg-light rounded-2'>
                                                  {/** pic div */}
                                                 <div className='pic-cont'>
                                                     <img className='mx-auto rounded-circle w-25 d-block mh-100' src={'http://127.0.0.1:8000/storage/images/'+e.pic}/>
@@ -45,10 +45,13 @@ const Courses = () => {
                                                 </div>
                                                 {/** teacher & status div */}
                                                 <div className='d-flex justify-content-between'>
-                                                    <div className='w-50'><i className='bi bi-calendar ms-1 color-1'></i><span>المعلم: <UserNameHelper userId={e.teacher}/> </span></div>
-                                                    <div className='w-50'><i className='bi bi-clock ms-1 color-1'></i><span>نوع الدرس:{e.status=='0'? 'مباشر' :'مسجل'}</span></div>
+                                                    <div className='w-50'><i className='bi bi-coin ms-1 color-1'></i><span> السعر:{e.price}</span></div>
+                                                    <div className='w-50'><i className='bi bi-sun ms-1 color-1'></i><span>نوع الدرس:{e.status=='0'? 'مباشر' :'مسجل'}</span></div>
                                                 </div>
-                                                <span>dd</span>
+                                                {/** teacher & status div */}
+                                                <div className='d-flex justify-content-between'>
+                                                    <div className='w-50'><i className='bi bi-person-circle ms-1 color-1'></i><span>المعلم: <UserNameHelper userId={e.teacher}/> </span></div>
+                                                </div>
                                         </div>
                                     ))
                                     :<span>لم يتم اضافة دروس بعد</span>

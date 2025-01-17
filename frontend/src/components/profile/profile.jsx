@@ -13,6 +13,7 @@ const Profile = () => {
    //states
    const [data, setData] = useState(false)
    const [course, setCourse] = useState(false)
+   const [studentCourses, setStudentCourses] = useState(null)
    const [add, setAdd] = useState(false)
    const [modify, setModify] = useState(false)
    //form states
@@ -109,9 +110,19 @@ const Profile = () => {
      //get myCourses
      const userData=JSON.parse(localStorage.getItem('loginData'))
      const id=userData.id;
-     const res=await http.post('/my-courses',{id});
+     const res=await http.post('/teacher-courses',{id});
      setCourses(res.data.courses)
  }
+
+ //get myCourses
+ const studentCoursesFunc=async()=>{
+    //get myCourses
+    const userData=JSON.parse(localStorage.getItem('loginData'))
+    const id=userData.id;
+    const res=await http.post('/student-courses',{id});
+    setStudentCourses(res.data.courses)
+}
+
 
  //useref for modefying data ( تعديل بيانات)
  const refModPhone = useRef(null)
@@ -139,7 +150,7 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
      const password_confirmation=refNewPasswordRepeat.current.value.trim();
      const aboutMe=refAboutMe.current.value.trim();
      const pic=refPic.current.files[0];
-     console.log(pic)
+     
      const allowedPicExe=['image/jpg','image/jpeg','image/png','application/pdf'];
      if(pic){
         const checkPic=(pic)=>{
@@ -205,16 +216,26 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
 
   //go to login if not logged in
   useEffect(() => {
-    fetchSubjects() //get all subjects
-    myCourses()
-    if(!loginData){navigate('/login');}
+    if(loginData){
+        fetchSubjects() //get all subjects
+        myCourses()
+    }else{
+       navigate('/login');
+    }
+    
   }, [loginData])
     
     return (
         <>
           {loginData &&
             <div className='p-2 fs-5 mb-5 main-div container-fluid'>
-                <p>{loginData.role==='teacher'? <span>صفحة حساب المعلم</span>:<span>صفحة حساب الطالب</span> }</p>
+                    {loginData.role==='s'? <span>صفحة حساب الطالب</span>:  <span>صفحة حساب المعلم</span> }
+                    {loginData.admin==='a'&& <span className='fs-6 me-2'>(أدمن)</span>} {loginData.admin==='sa'&&<span className='fs-6 me-2'>(سوبر أدمن)</span>}
+                    
+                    {/** admin and super admin login */}
+					{loginData&&loginData.admin==='a'||loginData&&loginData.admin==='sa'&&
+					<p className=' mx-4'> <Link className='' to='/dashboard'>لوحة التحكم</Link></p>}
+
                      {loginData&&loginData.pic!=null
                      ?<div className='pic-cont rounded-3 w-fit mx-auto w-25 '><img className='d-block mx-auto rounded-circle w-50 mh-100' src={baseURL+loginData.pic}/></div>
                      :<div className='rounded-3 h-fit mx-auto w-25 '><i className='bi bi-person-circle user-icon d-block w-fit mx-auto color-1'></i></div>
@@ -227,7 +248,7 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                     <ul className='nav p-0 rounded-2'>
                         <li className='mx-1 bg-dark rounded-2' onClick={showData}><Link className="d-inline-block nav-link">بياناتي</Link><i className='bi bi-info-square text-white mx-2 px-2'></i></li>
                         <li className='mx-1 bg-dark rounded-2' onClick={showCourse}><Link className="d-inline-block nav-link">دروسي</Link><i className='bi bi-book text-white mx-2 px-2'></i></li>
-                        <li className='mx-1 bg-dark rounded-2' onClick={showAdd}><Link className="d-inline-block nav-link" >اضافة درس</Link><i className='bi bi-plus-square text-white mx-2 px-2'></i></li>
+                        {loginData.role!=='s' && <li className='mx-1 bg-dark rounded-2' onClick={showAdd}><Link className="d-inline-block nav-link" >اضافة درس</Link><i className='bi bi-plus-square text-white mx-2 px-2'></i></li>}
                         <li className='mx-1 bg-dark rounded-2' onClick={showModify}><Link className="d-inline-block nav-link" >تعديل البيانات</Link><i className='bi bi-pencil-square text-white mx-2 px-2'></i></li>
                     </ul>
                 </div>
@@ -239,10 +260,10 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                     {
                         loginData.role==='teacher' 
                         ? <div className='mb-2'><span className='fw-bold'>مادة التخصص</span>: <span>{loginData.subject} - {loginData.stage=='1'? ' المرحلة الابتدائية' : loginData.stage=='2' ? ' المرحلة الثانوية' : ' المرحلة الاعدادية'} </span></div>
-                        : <div className='mb-2'><span className='fw-bold'>المرحلة</span> <span>{loginData.stage}</span></div>
+                        : <div className='mb-2'><span className='fw-bold'>المرحلة</span>: <span>{loginData.stage=='1'? ' المرحلة الابتدائية' : loginData.stage=='2' ? ' المرحلة الثانوية' : ' المرحلة الاعدادية'}</span></div>
                     }
                     <div><span className='fw-bold'>تاريخ التسجيل</span>: <span dir='ltr'>{loginData.registry_date}</span> </div>
-                    <div><span className='fw-bold'> نبذه عني</span>: <span dir='ltr'>{loginData.description}</span> </div>
+                    {loginData.role==='teacher' && <div><span className='fw-bold'> نبذه عني</span>: <span dir='ltr'>{loginData.description}</span> </div>}
                 </div>
                }
 
@@ -250,24 +271,33 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                {/* دروسي */}
                 {course && 
                     <div className='row justify-content-evenly m-0 fs-'>
-                        {
-                            !courses 
-                            ? <div className='w-fit mx-auto'><p className='spinner-border align-self-center'></p></div> 
-                            : Array.isArray(courses) && courses.length > 0 
-                                ?  courses.map((e)=>(
-                                    <div className='col-12 col-md-5 border border-1 py-2 bg-light rounded-2'>
-                                        <p className='fw-bold'>{e.name}</p>
-                                        <div className='d-flex justify-content-between'>
-                                        <div><i className='bi bi-book ms-1 color-1'></i><span>{e.subject}</span></div>
-                                        {fetchedGrades && fetchedGrades.map((g)=>( g.id==e.grade && <div><i className='bi bi-mortarboard ms-1 color-1'></i><span>{g.name}</span></div> ))}
+                        {loginData.role=='t'
+                            /* if user is a teacher  */
+                            ? 
+                                /* show courses added by this teacher  */
+                                !courses 
+                                /* show spinner till courses show up  */
+                                ? <div className='w-fit mx-auto'><p className='spinner-border align-self-center'></p></div> 
+                                /* if this teacher has courses show them  */
+                                : Array.isArray(courses) && courses.length > 0 
+                                    ?  courses.map((e)=>(
+                                        <div className='col-12 col-md-5 border border-1 py-2 bg-light rounded-2'>
+                                            <p className='fw-bold'>{e.name}</p>
+                                            <div className='d-flex justify-content-between'>
+                                            <div><i className='bi bi-book ms-1 color-1'></i><span>{e.subject}</span></div>
+                                            {fetchedGrades && fetchedGrades.map((g)=>( g.id==e.grade && <div><i className='bi bi-mortarboard ms-1 color-1'></i><span>{g.name}</span></div> ))}
+                                            </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <div><i className='bi bi-calendar ms-1 color-1'></i><span> {e.day=='1'? 'السبت والثلاثاء' : e.day=='2' ? 'الأحد والأربعاء' : 'الاثنين والخميس'}</span></div>
+                                                <div><i className='bi bi-clock ms-1 color-1'></i><span>{e.time}</span></div>
+                                            </div>
                                         </div>
-                                        <div className='d-flex justify-content-between'>
-                                            <div><i className='bi bi-calendar ms-1 color-1'></i><span> {e.day=='1'? 'السبت والثلاثاء' : e.day=='2' ? 'الأحد والأربعاء' : 'الاثنين والخميس'}</span></div>
-                                            <div><i className='bi bi-clock ms-1 color-1'></i><span>{e.time}</span></div>
-                                        </div>
-                                    </div>
-                                ))
-                                :  <p>لم يتم اضافة دروس بعد</p>
+                                    ))
+                                    /* if this teacher doesn't have courses show this  */
+                                    :  <p>لم يتم اضافة دروس بعد</p>
+                            
+                             /* if this user is student, show courses subscribed by this student  */    
+                            :<p>student here</p>     
                         }
                     </div>
                 } 
@@ -278,6 +308,7 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                 <div className='bg-info pt-4 px-3 rounded-4 w-50 mx-auto'>
                     <form>
                         <p className='mx-auto fw-bold w-fit mb-4'>اضافة درس</p>
+                        {/* اسم الدرس */}
                         <div className="row">
                             <label for="name" className="col-sm-3 col-form-label">اختر اسم</label>
                             <div className="col-sm-9">
@@ -285,7 +316,7 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                               <p className='font-sm mb-3 w-fit mx-auto'>من 10 - 250 حرف </p>
                             </div>
                         </div>
-                        
+                        {/* الصف */}
                         <div className="mb-3 row">
                             <label for="grade" className="col-sm-3 col-form-label">الصف</label>
                             <div className="col-sm-9">
@@ -299,14 +330,14 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                                 )}
                             </div>
                         </div>
-
+                         {/* المادة */}
                         <div className="mb-3 row">
                             <label for="subject" className="col-sm-3 col-form-label">المادة</label>
                             <div className="col-sm-9">
                             <input ref={refSubject} type="text" className="form-control text-secondary" id="subject"  value={loginData.subject} readonly/>
                             </div>
                         </div>
-
+                        {/*  اليوم */}
                         <div className="mb-3 row">
                             <label for="day" className="col-sm-3 col-form-label">اليوم</label>
                             <div className="col-sm-9">
@@ -318,7 +349,7 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                                 </select>
                             </div>
                         </div>
-
+                         {/* الوقت  */}
                         <div className="mb-3 row">
                             <label for="time" className="col-sm-3 col-form-label">الوقت</label>
                             <div dir='rtl' className="col-sm-9">
@@ -335,7 +366,6 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                                 {msg && <p className='mx-auto mt-2 w-fit'>{msg}</p>}
                            </div>
                         </div>
-
                     </form>
                 </div>
                } 

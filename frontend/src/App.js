@@ -7,7 +7,7 @@ import './App.css';
 
 
 
-const {Nav,Home,Teachers,Teacher,Courses,Course,UserProvider,Register,Login,Profile,PdfViewer,Logout,Footer}=Exports;
+const {Nav,Home,Teachers,Teacher,Courses,Course,UserProvider,Register,Login,Profile,Dashboard,PdfViewer,Logout,Footer}=Exports;
 
 function App() {
   
@@ -27,6 +27,7 @@ function App() {
                 <Route path='/register'    element={<Register/>} />
                 <Route path='/login'       element={<Login/>} />
                 <Route path='/profile'     element={<Profile/>} />
+                <Route path='/dashboard/*'     element={<Dashboard/>} />
                 <Route path='/pdf'         element={<PdfViewer/>} />
                 <Route path='/logout'      element={<Logout/>} />
 
