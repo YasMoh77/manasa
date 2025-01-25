@@ -173,7 +173,7 @@ const Home = () => {
             
             {/* bottom 4 */}
             <div className='py-5 '>
-                <div className='container-fluid mx-auto mar-b'>
+                <div className='container-fluid mx-auto mar-b '>
                     {/* teachers */}
                     <h1 className='mx-auto w-fit mar-t mar-b '>المعلمون</h1>
                     <div className='row mx-0 justify-content-evenly '>
@@ -204,15 +204,17 @@ const Home = () => {
                                                 <div className='w-fit mx-auto mb-3'>
                                                     <i className='bi bi-person-circle color-1 fs-1 '></i>
                                                 </div>
-                                                <h5 className='text-secondary w-fit mx-auto'><Link to={'/course/?c='+e.id}>{e.name}</Link></h5>
+                                                <h5 className='text-secondary w-fit mx-auto '><Link to={'/course/?c='+e.id}>{e.name}</Link></h5>
                                                 <div className='my-4'>
                                                     <div className='d-flex justify-content-between '>
-                                                        <div><i className='bi bi-book ms-1 color-1'></i><span>{e.subject}</span></div>
-                                                        {fetchedGrades && fetchedGrades.map((g)=>( g.id==e.grade && <div><i className='bi bi-mortarboard ms-1 color-1'></i><span>{g.name}</span></div> ))}
+                                                        <div className='w-50'><i className='bi bi-book ms-1 color-1'></i><span>{e.subject}</span></div>
+                                                        {fetchedGrades && fetchedGrades.map((g)=>( g.id==e.grade && 
+                                                        <div className='w-50 '><i className='bi bi-mortarboard ms-1 color-1'></i><span>{g.name}</span></div>
+                                                         ))}
                                                     </div>
                                                     <div className='d-flex justify-content-between'>
-                                                        <div><i className='bi bi-calendar color-1 '></i> <span>{e.day=='1'? 'السبت والثلاثاء' : e.day=='2' ? 'الأحد والأربعاء' : 'الاثنين والخميس'}</span></div>
-                                                        <div><i className='bi bi-clock color-1 me-2'></i> <span>{e.time}</span></div>
+                                                        <div className='w-50'><i className='bi bi-calendar color-1 '></i> <span>{e.day=='1'? 'السبت والثلاثاء' : e.day=='2' ? 'الأحد والأربعاء' : 'الاثنين والخميس'}</span></div>
+                                                        <div className='w-50'><i className='bi bi-clock color-1 me-2'></i> <span>{e.time}</span></div>
                                                     </div>
                                                 </div>
                                             </div>

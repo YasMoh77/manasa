@@ -4,7 +4,7 @@ import {Link, Routes,Route} from 'react-router-dom'
 import { UserContext } from '../user/UserProvider';
 //import
 import Payments from './Payments';
-import Search from "./Search/Search";
+import Search from "./Search";
 import './dashboard.css'
 
 
@@ -22,14 +22,14 @@ const Dashboard = () => {
         <div className='container-fluid  my-4'>
             dashboard
             <div className='row justify-content-between'>
-                <div className='col-3 side py-3'>
+                <div className='col-2 side py-3'>
                     <Link className='d-block mb-3' to='payments'>المدفوعات </Link>
                     <Link className='d-block mb-3'>اضافة مشترك</Link>
                     <Link className='d-block mb-3'>اضافة صف</Link>
                     <Link className='d-block' to='search'>بحث</Link>
                 </div>
 
-                <div className='col-9'>
+                <div className='col-10'>
                     <div>
                         <Routes>
                            <Route path='payments' element={<Payments/>} />    

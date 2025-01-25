@@ -3,4 +3,14 @@
     background-color: #d4e2e2;
     height: fit-content;
 }
-
+.cursorNormal{
+    cursor:initial
+}
+/*search*/
+.nameCss{
+    max-width: 5vw;
+}
+/* payment */
+.overflow-child{
+    width: 150vw;
+}

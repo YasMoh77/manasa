@@ -67,3 +67,19 @@
 .hr{opacity: .1;}
 .cursor{cursor: pointer;}
 .button{border: none; padding: 1vh 3vw; border-radius: 1.5vw;}
+.overflow-parent{
+ overflow-y: hidden;
+}
+/* spinners */
+.small-spinner{
+  width: 2vw;
+  height: 4.8vh;
+}
+.big-spinner{
+  width: 3.7vw;
+  height: 9vh;
+}
+.biggest-spinner{
+  width: 9vw;
+  height: 21.5vh;
+}

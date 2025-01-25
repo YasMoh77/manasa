@@ -1,6 +1,8 @@
 import React,{useState, useRef} from 'react'
-import { http } from '../../axios/axiosGlobal'
-import './Search.css'
+import { http } from '../axios/axiosGlobal'
+import CountCourses from '../helpers/countCourses'
+import FormatDate from '../helpers/formatDate'
+import './dashboard.css'
 
 const Search = () => {
     //states
@@ -44,23 +46,24 @@ const Search = () => {
                     <div> <input id='tea' type='radio' name='radio' ref={tea} /> <label for='tea'>معلم</label></div>
                     <div> <input id='cou' type='radio' name='radio' ref={cou} /> <label for='cou'>درس</label></div>
                </div>
-                <input className='w-100 rounded-2 border-1 px-2' onKeyUp={(e)=>{searchFunc(e.target.value)}} ref={searchInput} type='text' placeholder='بحث بالاسم او المعرف' />
+                <input className='w-100 rounded-2 border-1 px-2 py-2' onKeyUp={(e)=>{searchFunc(e.target.value)}} ref={searchInput} type='text' placeholder='بحث بالاسم أو ID أو التليفون' />
             </form>
             {wrong
             ?<p>{wrong}</p>
             :load
                 ?<div className='w-fit my-2 mx-auto'><p className='spinner-border mx-auto'></p></div>
                 :search&&Array.isArray(search)&&search.length>0
-                
+                    
                     ?found==='stu' /*found search results for a student*/
-                        ?<> <p className='mt-3 fw-bold'>نتائج البحث:</p>
+                        ?<div  className=''> <p className='mt-3 fw-bold'>نتائج البحث:</p>
                             <table className='w-100 text-center mb-4 bg-light'> 
                                 <thead>
-                                    <tr>
+                                    <tr className='fw-bold text-white bg-dark'>
                                         <td>ID </td>
                                         <td>اسم التلميذ</td>
                                         <td> التليفون</td>
                                         <td>المرحلة </td>
+                                        <td>دروس مشترك فيها</td>
                                         <td>تاريخ التسجيل</td>
                                     </tr>
                                 </thead>
@@ -70,22 +73,24 @@ const Search = () => {
                                         <td>{e.id}</td>
                                         <td className='nameCss'>{e.name}</td>
                                         <td>{e.phone}</td>
-                                        <td>{e.stage}</td>
-                                        <td>{e.registry_date}</td>
+                                        <td>{e.stage==1?'ابتدائي':(e.stage==2?'اعدادي':'ثانوي')}</td>
+                                        <td><CountCourses id={e.id} user={e.role} /></td>
+                                        <td dir='ltr'>{e.registry_date}</td>
                                     </tr>
                                      ))}
                                 </tbody>
                             </table>
-                            </>
+                            </div>
                         :found==='tea' /*found search results for a teacher*/
-                        ?<><p className='mt-3 fw-bold'>نتائج البحث:</p>
+                        ?<div><p className='mt-3 fw-bold'>نتائج البحث:</p>
                             <table className='w-100 text-center mb-4 bg-light'> 
                                 <thead>
-                                    <tr>
+                                    <tr className='fw-bold text-white bg-dark'>
                                         <td>ID </td>
                                         <td>اسم المعلم</td>
                                         <td>المادة </td>
                                         <td>المرحلة </td>
+                                        <td> دروس مضافة </td>
                                         <td> التليفون</td>
                                         <td>تاريخ التسجيل</td>
                                     </tr>
@@ -96,19 +101,20 @@ const Search = () => {
                                         <td>{e.id}</td>
                                         <td className='nameCss'>{e.name}</td>
                                         <td>{e.subject}</td>
-                                        <td>{e.stage}</td>
+                                        <td>{e.stage==1?'ابتدائي':(e.stage==2?'اعدادي':'ثانوي')}</td>
+                                        <td><CountCourses id={e.id} user={e.role} /></td>
                                         <td>{e.phone}</td>
-                                        <td>{e.registry_date}</td>
+                                        <td dir='ltr'>{e.registry_date}</td>
                                     </tr>
                                     ))}
                                 </tbody>
                             </table>
-                         </>
+                         </div>
                          /*found search results for a course*/
-                        :<><p className='mt-3 fw-bold'>نتائج البحث:</p>
+                        :<div><p className='mt-3 fw-bold'>نتائج البحث:</p>
                             <table className='w-100 text-center mb-4 bg-light'> 
                                 <thead>
-                                    <tr>
+                                    <tr className='fw-bold text-white bg-dark'>
                                         <td>ID </td>
                                         <td>اسم الدورة</td>
                                         <td> الصف</td>
@@ -125,20 +131,21 @@ const Search = () => {
                                         <td>{e.id}</td>
                                         <td className='nameCss'>{e.name}</td>
                                         <td>{e.grade}</td>
-                                        <td>{e.day}</td>
-                                        <td>{e.time}</td>
-                                        <td>{e.price}</td>
-                                        <td>{e.status}</td>
+                                        <td>{e.subject}</td>
+                                        <td>{e.day==1?'السبت والثلاثاء':(e.day==2?'الاحد والاربعاء':'الاثنين والخميس')}</td>
+                                        <td dir='ltr'><FormatDate time={e.time} /></td>
+                                        <td>{e.price+'ج.م'}</td>
+                                        <td>{e.status==0?'أونلاين':'مسجل'}</td>
                                     </tr>
                                     ))}
                                 </tbody>
                             </table>
-                        </>  
+                        </div>  
                         /* search results are null */              
-                    :!search
-                        ?<p> </p>
-                        :<p>لا توجد نتائج  </p>
-               
+                :!search
+                    ?<p> </p>
+                    :<p>لا توجد نتائج  </p>
+                    
              }
         </div>
     )

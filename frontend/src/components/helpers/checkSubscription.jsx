@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import {useEffect} from 'react'
 import { http } from '../axios/axiosGlobal';
 
 const CheckSubscription = ({userId,courseId,courseTime,subscriptionResult}) => {
@@ -23,7 +23,7 @@ const CheckSubscription = ({userId,courseId,courseTime,subscriptionResult}) => {
         formCourseDate.setHours(courseHour,courseMinutes,courseSeconds,0);
         const courseDate=new Date(formCourseDate.getTime());
         //send the new values inside subscriptionResult
-      subscriptionResult&&subscriptionResult(res.data.user,addToNow,courseDate);
+      subscriptionResult&&subscriptionResult(res.data.student,addToNow,courseDate);
     }
 
     useEffect(() => {

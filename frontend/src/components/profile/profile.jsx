@@ -84,7 +84,7 @@ const Profile = () => {
          //start spinner
          setLoad(true);
          //send
-         const res=await http.post('/start-course',data);
+         const res=await http.post('/create-course',data);
          //stop spinner
          setLoad(false);
          //show msg
@@ -92,7 +92,8 @@ const Profile = () => {
          //go to profile
          setTimeout(() => {
             if(res.data.done=='done'){
-                window.location.reload();
+                //console.log(res.data.message)
+               // window.location.reload();
             }
          }, 1800);
           
@@ -363,7 +364,7 @@ const checkAboutMe=(value)=>{if(value.length>0 &&(value.length<25 || value.lengt
                                 <button onClick={submitCourse} className="w-75 py-2 border-0 bg-1 d-block mx-auto rounded-2">
                                 {load? <span className='spinner-border mx-auto align-self-center d-block'></span> :'أرسل'}
                                 </button>
-                                {msg && <p className='mx-auto mt-2 w-fit'>{msg}</p>}
+                                {msg && <p dir='ltr' className='mx-auto mt-2 w-fit'>{msg}</p>}
                            </div>
                         </div>
                     </form>

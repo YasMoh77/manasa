@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../user/UserProvider';
 import UserNameHelper from '../helpers/userNameHelper';
+import FormatDate from '../helpers/formatDate';
 
 import './courses.css'
 
@@ -41,12 +42,12 @@ const Courses = () => {
                                                 {/** day & time div */}
                                                 <div className='d-flex justify-content-between'>
                                                     <div className='w-50'><i className='bi bi-calendar ms-1 color-1'></i><span> {e.day=='1'? 'السبت والثلاثاء' : e.day=='2' ? 'الأحد والأربعاء' : 'الاثنين والخميس'}</span></div>
-                                                    <div className='w-50'><i className='bi bi-clock ms-1 color-1'></i><span>{e.time}</span></div>
+                                                    <div className='w-50'><i className='bi bi-clock ms-1 color-1'></i><span dir='ltr'><FormatDate time={e.time} /></span></div>
                                                 </div>
                                                 {/** teacher & status div */}
                                                 <div className='d-flex justify-content-between'>
-                                                    <div className='w-50'><i className='bi bi-coin ms-1 color-1'></i><span> السعر:{e.price}</span></div>
-                                                    <div className='w-50'><i className='bi bi-sun ms-1 color-1'></i><span>نوع الدرس:{e.status=='0'? 'مباشر' :'مسجل'}</span></div>
+                                                    <div className='w-50'><i className='bi bi-coin ms-1 color-1'></i><span> السعر:{e.price+'ج.م'}</span></div>
+                                                    <div className='w-50'><i className='bi bi-sun ms-1 color-1'></i><span>نوع الدرس:{e.status=='0'? 'اونلاين' :'مسجل'}</span></div>
                                                 </div>
                                                 {/** teacher & status div */}
                                                 <div className='d-flex justify-content-between'>
