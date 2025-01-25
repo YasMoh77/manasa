@@ -17,13 +17,13 @@ class Course extends Model
     public $timestamps=false;
 
     //relationship user-course
-    public function user(): BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'course_user', 'course_id', 'user_id');
     }
 
     //relationship student-course
-    public function student(): BelongsToMany
+    public function students(): BelongsToMany
     {
         return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id');
     }

@@ -33,7 +33,8 @@ class UserController extends Controller
             //search using values
             $found=Student::where(function($q)use($searchValue){
                 $q->where('id',$searchValue)
-                ->orWhere('name','like','%'.$searchValue.'%');
+                ->orWhere('name','like','%'.$searchValue.'%')
+                ->orWhere('phone','like','%'.$searchValue.'%');
              })->get();
             //if not found
             if($found){ 
@@ -42,12 +43,10 @@ class UserController extends Controller
             //search for teacher
         }elseif($radioValue==='tea'){
             //search using values
-           /* $found=User::where('id',$searchValue)
-            ->orWhere('name','like','%'.$searchValue.'%')
-            ->first();*/
             $found=User::where(function($q)use($searchValue){
                $q->where('id',$searchValue)
-               ->orWhere('name','like','%'.$searchValue.'%');
+               ->orWhere('name','like','%'.$searchValue.'%')
+               ->orWhere('phone','like','%'.$searchValue.'%');
             })->get();
             //if not found
             if($found){ 
@@ -56,9 +55,10 @@ class UserController extends Controller
 
         }elseif($radioValue==='cou'){
             //search for course
-            $found=Course::where('id',$searchValue)
-            ->orWhere('name','like','%'.$searchValue.'%')
-            ->first();
+            $found=Course::where(function($q)use($searchValue){
+                $q->where('id',$searchValue)
+                ->orWhere('name','like','%'.$searchValue.'%');
+             })->get();
             //if not found
             if($found){ 
                 return response()->json(['search'=>$found,'found'=>'cou']);
@@ -67,12 +67,94 @@ class UserController extends Controller
     }
     
     
-    //insert courses in pivot table
-    public function piv($uid,$cid)
-    {
-        $user=User::find($uid);
-        $user->course()->attach($cid);
-        echo 'done';
+    //insert courses in pivot table 
+    public function pivot(Request $request) 
+    {   
+        //check student's existence
+        $student=Student::find($request->student_Id);
+        if($student){
+            //associate course to student and make student a subscriber
+            $addSubscription=$student->courses()->syncWithoutDetaching($request->course_Id);
+                if($addSubscription){
+                    // Delete old file if it exists
+                    $foundPayment=Payment::where(['student'=>$request->student_Id,'course'=>$request->course_Id]);
+                    if($foundPayment->first()){
+                        //delete sent file
+                        $oldFilePath = 'public/files/' . $foundPayment->first()->sentFile;
+                        Storage::delete($oldFilePath);
+                        //delete row
+                       $foundPayment->delete();
+                    }
+                    //return notice
+                    return response()->json([
+                        'success'=>'done'
+                    ]);
+                    
+
+                }else{
+                    return response()->json([
+                        'success'=>'failed'
+                    ]);
+                }
+        }   
+    }
+
+
+    //delete courses from pivot table 
+    public function pivotDelete(Request $request) 
+    {   
+        //check student's existence
+        $student=Student::find($request->student_Id);
+        if(!$student){
+            return response()->json([
+                'success'=>'not found'
+            ]);
+        }
+        //check if user is subscribed
+       $found = Student::find($request->student_Id)?->courses()->where('courses.id', $request->course_Id)->exists();
+        if($found){
+            //Unassociate course to student
+            $deletedSubscription=$student->courses()->detach($request->course_Id);
+                if($deletedSubscription){
+                    return response()->json([
+                        'success'=>'تم الالغاء'
+                    ]);
+                }else{
+                    return response()->json([
+                        'success'=>'فشل؛ حاول مرة أخرى'
+                    ]);
+                }
+        }  
+        return response()->json([
+            'success'=>'هذا التلميذ غير مشترك بالفعل'
+        ]); 
+    }
+
+    //count Courses for a student
+    public function countCourses($id,$user)
+    { 
+      if($user=='t'){
+        //check student's existence
+        $found=User::find($id);
+        //if student exists, cunt courses
+        if($found){
+            $number=Course::where('teacher',$id)->count();
+            return response()->json([
+                'number'=>$number
+            ]);
+        }
+      }else{
+        //check student's existence
+        $found=Student::find($id);
+        //if student exists, cunt courses
+        if($found){
+            $number=Student::find($id)?->courses()->count();
+            return response()->json([
+                'number'=>$number
+            ]);
+        }
+    }
+
     }
 
     //check subscription
@@ -83,29 +165,29 @@ class UserController extends Controller
       /* $found=User::whereHas('course',function($q) use($courseId){
             $q->where('courses.id',$courseId);
        })->where('users.id',$userId)->exists();*/
-       // if user isn't in database
+       // if student isn't in database
        if(!$user){
-          return response()->json(['user'=>'no user']);
+          return response()->json(['student'=>'not found']);
        }
-       //check if user is subscribed
-       $found = Student::find($userId)?->course()->where('courses.id', $courseId)->exists();
+       //check if student is subscribed
+       $found = Student::find($userId)?->courses()->where('courses.id', $courseId)->exists();
 
-       //if user is subscribed or not
+       //if student is subscribed or not, respond accordingly
        if($found){
-          return response()->json(['user'=>'subscribed']);
+          return response()->json(['student'=>'مشترك']);
        }else{
-        return response()->json(['user'=>'no subscription']);
+        return response()->json(['student'=>'غير مشترك']);
        }
     }
     
 
     //allow subscribed user to start streaming
-    public function streaming($userId,$courseId)
+    public function streaming($student_Id,$course_Id)
     {  
         //find user
-        $user=User::find($userId);
+        $user=Student::find($student_Id);
       //check if user is subscribed
-      $found = User::find($userId)?->course()->where('courses.id', $courseId)->exists();
+      $found = Student::find($student_Id)?->courses()->where('courses.id', $course_Id)->exists();
       if($found){
           return view('streaming');
       }
@@ -124,13 +206,7 @@ class UserController extends Controller
     if (!$foundRow) {
         //check if received data is not empty
         if($request->sentFile&&$request->student_Id&&$request->student_name&&$request->course_Id&&$request->method){
-            // Delete old file if it exists
-            $oldFilePath = 'public/files/' . $foundRow->sentFile;
-            Storage::delete($oldFilePath);
-            //delete row
-            $found->delete();
-        
-                //store file 
+            //store file 
             $file=$request->file('sentFile')->getClientOriginalName(); 
             $fileExpl=explode('.',$file); 
             $fileExt= end($fileExpl);  
@@ -144,13 +220,13 @@ class UserController extends Controller
             $pay=new Payment();
                 $pay->name=$request->student_name;
                 $pay->student=$request->student_Id;
+                $pay->phone=$request->student_phone;
                 $pay->course=$request->course_Id;
                 $pay->sentFile=$fileFinal;
                 $pay->method=$request->method;
             $pay->save();
             return response()->json([
                 'data'=>'شكرا تم الاستلام',
-                //'data'=>$fileFinal
             ]);
         }
    }else{
@@ -163,10 +239,18 @@ class UserController extends Controller
 public function getPayments()
 {
     $payments=Payment::all();
+    $noPayments='0';
     //send payments
-    return response()->json([
-        'payments'=>$payments
-    ]);
+    if($payments->isNotEmpty()){
+        return response()->json([
+            'payments'=>$payments
+        ]);
+    }else{
+        return response()->json([
+            'payments'=>$noPayments
+        ]);
+    }
+    
 }
 
     

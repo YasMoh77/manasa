@@ -28,7 +28,7 @@ class Student extends Model
 
     
     //relationship student-course
-    public function course(): BelongsToMany
+    public function courses(): BelongsToMany
     { 
         return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id');
     }

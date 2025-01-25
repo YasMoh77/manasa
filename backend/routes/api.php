@@ -43,7 +43,7 @@ Route::get('/some-courses', [Controller::class, 'someCourses']);
 //fetch one teacher courses
 Route::post('/one-teacher-courses/{id}', [Controller::class, 'oneTeacherCourses']);
 //create a course
-Route::post('/start-course', [Controller::class, 'courseStart']);
+Route::post('/create-course', [Controller::class, 'courseCreate']);
 //get mycourses(one teacher's course)
 Route::post('/teacher-courses', [Controller::class, 'teacherCourses']);
 //get studentcourses
@@ -53,7 +53,11 @@ Route::get('/get-course/{id}',[CourseController::class,'getCourseData']);
 //check if students is subscribed to a certain course
 Route::get('/check-course-subscription/{userId}/{courseId}', [UserController::class, 'checkSubscription']);
 //insert course in pivot table
-Route::get('/piv/{userId}/{cid}', [UserController::class, 'piv']);
+Route::post('/pivot/{student_Id}/{course_Id}', [UserController::class, 'pivot']);
+//remove course from pivot table
+Route::post('/pivot-delete/{student_Id}/{course_Id}', [UserController::class, 'pivotDelete']);
+//count subscribed courses for a student
+Route::get('/count-courses/{id}/{user}', [UserController::class, 'countCourses']);
 
 
 /********** fetch only a few ***********/
@@ -77,4 +81,4 @@ Route::get('/get-payments', [UserController::class, 'getPayments']);
 //pdf
 Route::get('/pdf', [pdfController::class, 'pdf']);
 //streaming
-Route::get('/streaming/{userId}/{courseId}',[UserController::class, 'streaming']);//return view('streaming');
+Route::get('/streaming/{student_Id}/{course_Id}',[UserController::class, 'streaming']);//return view('streaming');

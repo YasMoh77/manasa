@@ -12,8 +12,16 @@ class CourseController extends Controller
     public function getCourseData($id)
     {
        $course=Course::find($id);
-       return response()->json([
-           'course'=>$course
-       ]);
+        $noCourse='0';
+       if($course){
+        return response()->json([
+            'course'=>$course
+        ]);
+       }else{
+        return response()->json([
+            'course'=>$noCourse
+        ]); 
+       }
+       
     }
 }

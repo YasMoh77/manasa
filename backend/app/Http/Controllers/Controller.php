@@ -12,6 +12,7 @@ use App\Models\Grade;
 use App\Models\Course;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 
 class Controller extends BaseController
@@ -151,9 +152,32 @@ class Controller extends BaseController
 
 
     //make a course
-    public function courseStart(Request $request)
-    {
-      $validate=$request->validate([
+    public function courseCreate(Request $request)
+    {  
+        // $now= date('d-m-Y H:i:s');
+         $now=Carbon::now('Africa/Cairo');
+         $dayWeek= $now->dayOfWeek;
+         if($request->c_day==1){ //2=tues,6=sat
+           if($dayWeek==1){$firstDay=$now->addDays(1);}elseif($dayWeek==2){$firstDay=$now->addDays(4);}
+           elseif($dayWeek==3){$firstDay=$now->addDays(3);}elseif($dayWeek==4){$firstDay=$now->addDays(2);}
+           elseif($dayWeek==5){$firstDay=$now->addDays(1);}elseif($dayWeek==6){$firstDay=$now->addDays(3);}
+           elseif($dayWeek==0){$firstDay=$now->copy()->addDays(2);}
+
+         }elseif($request->c_day==2){ //0==sun, 3=wed
+          if($dayWeek==1){$firstDay=$now->addDays(2);}elseif($dayWeek==2){$firstDay=$now->addDays(1);}
+          elseif($dayWeek==3){$firstDay=$now->addDays(4);}elseif($dayWeek==4){$firstDay=$now->addDays(3);}
+          elseif($dayWeek==5){$firstDay=$now->addDays(2);}elseif($dayWeek==6){$firstDay=$now->addDays(1);}
+          elseif($dayWeek==0){$firstDay=$now->addDays(3);}
+
+        }elseif($request->c_day=='3'){ //1==mon, 4=thurs
+          if($dayWeek==1){$firstDay=$now->addDays(3);}elseif($dayWeek==2){$firstDay=$now->addDays(2);}
+          elseif($dayWeek==3){$firstDay=$now->addDays(1);}elseif($dayWeek==4){$firstDay=$now->addDays(4);}
+          elseif($dayWeek==5){$firstDay=$now->addDays(3);}elseif($dayWeek==6){$firstDay=$now->addDays(2);}
+          elseif($dayWeek==0){$firstDay=$now->addDays(1);}
+
+        }
+
+     /* $validate=$request->validate([
          'c_name'=>['required','string','min:10','max:250'],
          'c_subject'=>['required','string'],
          'c_grade'=>['required','string'],
@@ -175,14 +199,16 @@ class Controller extends BaseController
           $course->subject= $request->c_subject;  
           $course->grade  = $request->c_grade;  
           $course->day    = $request->c_day;  
+
           $course->time   = $request->c_time;  
           $course->price  = $price;  
           $course->teacher= $teacher;
-       $course->save();
+       $course->save();*/
       //return response
       return response()->json([
-         'message'=>'تم اضافة درس جديد بنجاح',
-         'done'=>'done'
+         //'message'=>'تم اضافة درس جديد بنجاح',
+         'done'=>'done',
+         'message'=>$now
        ]);
     }
 
